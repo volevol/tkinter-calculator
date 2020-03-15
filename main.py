@@ -4,70 +4,94 @@ root = Tk()
 root.title("Calculator")
 root.geometry("362x325")
 
+# Data
+equation = []
+
 
 # Functions
 
-# Main function
-def add(sign):
+# Main functions
+def add(eq, sign):
     print(sign, end=" ")
+    eq += [sign]
+    print(eq)
+    if len(eq) > 3:
+        count(eq)
+        print(eq)
+
+
+def count(eq):
+    if eq[1] == "+":
+        eq[0] = float(eq[0]) + float(eq[2])
+    elif eq[1] == "-":
+        eq[0] = float(eq[0]) - float(eq[2])
+    elif eq[1] == "*":
+        eq[0] = float(eq[0]) * float(eq[2])
+    elif eq[1] == "/":
+        eq[0] = float(eq[0]) / float(eq[2])
+    else:
+        print("Unsupported operation")
+    eq.pop(1)
+    eq.pop(1)
+    return eq
 
 
 # Number functions
 def add_1():
-    add("1")
+    add(equation, "1")
 
 
 def add_2():
-    add("2")
+    add(equation, "2")
 
 
 def add_3():
-    add("3")
+    add(equation, "3")
 
 
 def add_4():
-    add("4")
+    add(equation, "4")
 
 
 def add_5():
-    add("5")
+    add(equation, "5")
 
 
 def add_6():
-    add("6")
+    add(equation, "6")
 
 
 def add_7():
-    add("7")
+    add(equation, "7")
 
 
 def add_8():
-    add("8")
+    add(equation, "8")
 
 
 def add_9():
-    add("9")
+    add(equation, "9")
 
 
 def add_0():
-    add("0")
+    add(equation, "0")
 
 
 # Math functions
 def plus():
-    add("+")
+    add(equation, "+")
 
 
 def minus():
-    add("-")
+    add(equation, "-")
 
 
 def multiply():
-    add("*")
+    add(equation, "*")
 
 
 def divide():
-    add("/")
+    add(equation, "/")
 
 
 # Special functions
