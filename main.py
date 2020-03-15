@@ -1,6 +1,7 @@
-from tkinter import *
+import tkinter as tk
+import operator
 
-root = Tk()
+root = tk.Tk()
 root.title("Calculator")
 root.geometry("362x325")
 
@@ -12,8 +13,10 @@ equation = []
 
 # Main functions
 def add(eq, sign):
+    """Adds a character to the "equation" list, consisting of two
+    numbers and an operation sign between them"""
     print(sign, end=" ")
-    eq += [sign]
+    add_more(eq, sign)
     print(eq)
     if len(eq) > 3:
         count(eq)
@@ -21,6 +24,11 @@ def add(eq, sign):
 
 
 def count(eq):
+    """If the list of "equations" is full, he considers the first
+    two numbers with the corresponding sign of the operation between
+    them and rewrites the list, placing the solution as one of the
+    numbers for subsequent operations. The sign of the next operation
+    is also saved."""
     if eq[1] == "+":
         eq[0] = float(eq[0]) + float(eq[2])
     elif eq[1] == "-":
@@ -41,65 +49,35 @@ def count(eq):
         print("Unsupported operation")
     eq.pop(1)
     eq.pop(1)
+    eq[0] = str(eq[0])
+    return eq
+
+
+def add_more(eq, sign):
+    """Adds a character to the "equation" list, consisting of two numbers
+    and an operation sign between them"""
+    if sign.isdigit():
+        if len(eq) > 1 and eq[-1].replace('.', '', 1).isdigit():
+            eq[-1] += sign
+        else:
+            eq += [sign]
+    else:
+        if len(eq) > 1 and not eq[-1].replace('.', '', 1).isdigit():
+            eq[-1] = sign
+        else:
+            eq += [sign]
+            if not eq[0].replace('.', '', 1).replace('-', '', 1).isdigit():
+                eq.pop()
     return eq
 
 
 # Number functions
-def add_1():
-    add(equation, "1")
+def add_x(x):
+    """It takes a character from a button and sends it to add()"""
+    def f():
+        add(equation, x)
 
-
-def add_2():
-    add(equation, "2")
-
-
-def add_3():
-    add(equation, "3")
-
-
-def add_4():
-    add(equation, "4")
-
-
-def add_5():
-    add(equation, "5")
-
-
-def add_6():
-    add(equation, "6")
-
-
-def add_7():
-    add(equation, "7")
-
-
-def add_8():
-    add(equation, "8")
-
-
-def add_9():
-    add(equation, "9")
-
-
-def add_0():
-    add(equation, "0")
-
-
-# Math functions
-def plus():
-    add(equation, "+")
-
-
-def minus():
-    add(equation, "-")
-
-
-def multiply():
-    add(equation, "*")
-
-
-def divide():
-    add(equation, "/")
+    return f
 
 
 # Special functions
@@ -112,46 +90,35 @@ def equal():
 
 
 # Output labels
-process_label = Label(root, anchor=E, text="2+2*2", width=24, font=("Arial", 18), bg="gray", fg="gray20")
-answer_label = Label(root, anchor=E, text="8", width=24, font=("Arial", 18), bg="gray")
+process_label = tk.Label(root, anchor=tk.E, text="2+2*2", width=24, font=("Arial", 18), bg="gray", fg="gray20")
+answer_label = tk.Label(root, anchor=tk.E, text="8", width=24, font=("Arial", 18), bg="gray")
 
 # Number labels
-button_1 = Button(root, text="1", width=4, font=("Arial", 18), bg="gray", command=add_1)
-button_2 = Button(root, text="2", width=4, font=("Arial", 18), bg="gray", command=add_2)
-button_3 = Button(root, text="3", width=4, font=("Arial", 18), bg="gray", command=add_3)
-button_4 = Button(root, text="4", width=4, font=("Arial", 18), bg="gray", command=add_4)
-button_5 = Button(root, text="5", width=4, font=("Arial", 18), bg="gray", command=add_5)
-button_6 = Button(root, text="6", width=4, font=("Arial", 18), bg="gray", command=add_6)
-button_7 = Button(root, text="7", width=4, font=("Arial", 18), bg="gray", command=add_7)
-button_8 = Button(root, text="8", width=4, font=("Arial", 18), bg="gray", command=add_8)
-button_9 = Button(root, text="9", width=4, font=("Arial", 18), bg="gray", command=add_9)
-button_0 = Button(root, text="0", width=4, font=("Arial", 18), bg="gray", command=add_0)
+buttons = []
+for i in range(9):
+    buttons.append(tk.Button(root, text=str((i + 1) % 10), width=4, font=("Arial", 18),
+                             bg="gray", command=add_x(str(i + 1))))
+buttons.append(tk.Button(root, text="0", width=4, font=("Arial", 18),
+                         bg="gray", command=add_x("0")))
 
 # Math labels
-button_add = Button(root, text="+", width=4, font=("Arial", 18), bg="gray", command=plus)
-button_subtract = Button(root, text="-", width=4, font=("Arial", 18), bg="gray", command=minus)
-button_multiply = Button(root, text="*", width=4, font=("Arial", 18), bg="gray", command=multiply)
-button_divide = Button(root, text="/", width=4, font=("Arial", 18), bg="gray", command=divide)
+button_add = tk.Button(root, text="+", width=4, font=("Arial", 18), bg="gray", command=add_x("+"))
+button_subtract = tk.Button(root, text="-", width=4, font=("Arial", 18), bg="gray", command=add_x("-"))
+button_multiply = tk.Button(root, text="*", width=4, font=("Arial", 18), bg="gray", command=add_x("*"))
+button_divide = tk.Button(root, text="/", width=4, font=("Arial", 18), bg="gray", command=add_x("/"))
 
 # Special labels
-button_c = Button(root, text="C", width=4, font=("Arial", 18), bg="gray", command=c)
-button_equal = Button(root, text="=", width=4, font=("Arial", 18), bg="gray", command=equal)
+button_c = tk.Button(root, text="C", width=4, font=("Arial", 18), bg="gray", command=c)
+button_equal = tk.Button(root, text="=", width=4, font=("Arial", 18), bg="gray", command=equal)
 
 # PLACE Output labels
 process_label.place(x=10, y=10)
 answer_label.place(x=10, y=50)
 
 # PLACE Number labels
-button_1.place(x=10, y=100)
-button_2.place(x=102, y=100)
-button_3.place(x=194, y=100)
-button_4.place(x=10, y=155)
-button_5.place(x=102, y=155)
-button_6.place(x=194, y=155)
-button_7.place(x=10, y=210)
-button_8.place(x=102, y=210)
-button_9.place(x=194, y=210)
-button_0.place(x=100, y=265)
+for i in range(len(buttons) - 1):
+    buttons[i].place(x=10 + 92 * (i % 3), y=100 + 55 * (i // 3))
+buttons[9].place(x=100, y=265)
 
 # PLACE Math labels
 button_add.place(x=286, y=100)
@@ -164,3 +131,10 @@ button_c.place(x=10, y=265)
 button_equal.place(x=194, y=265)
 
 root.mainloop()
+
+# выглядит страшно
+# как минимум гуи стоит выносить в отдельный файл
+# а функции в отдельный
+
+# а ты регулярки не использовал?
+# чтобы строку разбить тип на числа и знаки
