@@ -28,7 +28,15 @@ def count(eq):
     elif eq[1] == "*":
         eq[0] = float(eq[0]) * float(eq[2])
     elif eq[1] == "/":
-        eq[0] = float(eq[0]) / float(eq[2])
+        if eq[2] == "0":
+            print("Error. Division by zero")
+            eq.pop(0)
+            eq.pop(0)
+            eq.pop(0)
+            eq.pop(0)
+            return eq
+        else:
+            eq[0] = float(eq[0]) / float(eq[2])
     else:
         print("Unsupported operation")
     eq.pop(1)
