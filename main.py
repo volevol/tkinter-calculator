@@ -12,9 +12,15 @@ equation = []
 # Functions
 
 # Main functions
+
+def init():
+    """Sets blank lines to labels values"""
+    process_label.configure(text="")
+    answer_label.configure(text="")
+
+
 def add(eq, sign):
-    """Adds a character to the "equation" list, consisting of two
-    numbers and an operation sign between them"""
+    """Adds a character to the "equation" list, consisting of two numbers and an operation sign between them"""
     print(sign, end=" ")
     add_more(eq, sign)
     print(eq)
@@ -24,11 +30,9 @@ def add(eq, sign):
 
 
 def count(eq):
-    """If the list of "equations" is full, he considers the first
-    two numbers with the corresponding sign of the operation between
-    them and rewrites the list, placing the solution as one of the
-    numbers for subsequent operations. The sign of the next operation
-    is also saved."""
+    """If the list of "equations" is full, he considers the first two numbers with the corresponding sign of the
+    operation between them and rewrites the list, placing the solution as one of the numbers for subsequent operations.
+    The sign of the next operation is also saved."""
     ops = {"+": operator.add,
            "-": operator.sub,
            "*": operator.mul,
@@ -37,6 +41,7 @@ def count(eq):
         print("Error. Division by zero")
         for _ in range(len(eq)):
             eq.pop(0)
+        process_insert("")
     else:
         eq[0] = str(ops[eq[1]](float(eq[0]), float(eq[2])))
         for _ in range(len(eq) - 2):
@@ -45,36 +50,52 @@ def count(eq):
 
 
 def add_more(eq, sign):
-    """Adds a character to the "equation" list, consisting of two numbers
-    and an operation sign between them"""
+    """Adds a character to the "equation" list, consisting of two numbers and an operation sign between them"""
     if sign == "C":
         for _ in range(len(eq)):
             eq.pop(0)
+        init()
     elif sign == "=":
         if len(eq) != 2:
             eq += [sign]
         elif len(eq) == 2:
+            if eq[-1] != "=":
+                text = process_label["text"][:-1]
+                process_insert("")
+                process_insert(text)
             eq[1] = sign
     elif sign.isdigit():
         if len(eq) >= 1:
             if eq[-1] == "0":
                 if sign != "0":
                     eq[-1] = sign
+                    process_insert(sign, True)
             elif eq[-1].isdigit():
                 eq[-1] += sign
+                process_insert(sign)
             elif eq[-1] == "=":
+                process_insert("")
                 eq.pop()
                 eq[0] = sign
+                process_insert(sign, True)
             else:
                 eq += [sign]
+                process_insert(sign)
         else:
             eq += [sign]
+            process_insert(sign)
     else:
         if len(eq) >= 1:
             if not eq[-1].isdigit():
+                if eq[-1] == "=":
+                    process_insert("")
+                    process_insert(eq[0] + sign)
+                else:
+                    process_insert(sign, True)
                 eq[-1] = sign
             else:
                 eq += [sign]
+                process_insert(sign)
     return eq
 
 
@@ -88,6 +109,18 @@ def add_x(x):
     return f
 
 
+# GUI functions
+def process_insert(sign, pop=False):
+    if sign == "":
+        process_label.configure(text="")
+    else:
+        if pop:
+            text = process_label["text"][:-1] + sign
+        else:
+            text = process_label["text"] + sign
+        process_label.configure(text=text)
+
+
 # Output labels
 process_label = tk.Label(root, anchor=tk.E, text="2+2*2", width=24, font=("Arial", 18), bg="gray", fg="gray20")
 answer_label = tk.Label(root, anchor=tk.E, text="8", width=24, font=("Arial", 18), bg="gray")
@@ -95,10 +128,9 @@ answer_label = tk.Label(root, anchor=tk.E, text="8", width=24, font=("Arial", 18
 # Number labels
 buttons = []
 for i in range(9):
-    buttons.append(tk.Button(root, text=str((i + 1) % 10), width=4, font=("Arial", 18),
-                             bg="gray", command=add_x(str(i + 1))))
-buttons.append(tk.Button(root, text="0", width=4, font=("Arial", 18),
-                         bg="gray", command=add_x("0")))
+    buttons.append(tk.Button(root, text=str((i + 1) % 10), width=4, font=("Arial", 18), bg="gray",
+                             command=add_x(str(i + 1))))
+buttons.append(tk.Button(root, text="0", width=4, font=("Arial", 18), bg="gray", command=add_x("0")))
 
 # Math labels
 button_add = tk.Button(root, text="+", width=4, font=("Arial", 18), bg="gray", command=add_x("+"))
@@ -128,6 +160,8 @@ button_divide.place(x=286, y=265)
 # PLACE Special labels
 button_c.place(x=10, y=265)
 button_equal.place(x=194, y=265)
+
+init()
 
 root.mainloop()
 
