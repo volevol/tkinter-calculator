@@ -50,31 +50,31 @@ def add_more(eq, sign):
     if sign == "C":
         for _ in range(len(eq)):
             eq.pop(0)
-    if sign == "=":
-        if len(eq) == 1:
+    elif sign == "=":
+        if len(eq) != 2:
             eq += [sign]
         elif len(eq) == 2:
             eq[1] = sign
-        elif len(eq) == 3:
-            eq += [sign]
     elif sign.isdigit():
-        if len(eq) == 1 and eq[0].isdigit():
-            eq[0] += sign
-        elif len(eq) > 1 and eq[-1].replace('.', '', 1).isdigit():
-            eq[-1] += sign
-        else:
-            if len(eq) > 1 and eq[-1] == "=":
+        if len(eq) >= 1:
+            if eq[-1] == "0":
+                if sign != "0":
+                    eq[-1] = sign
+            elif eq[-1].isdigit():
+                eq[-1] += sign
+            elif eq[-1] == "=":
                 eq.pop()
+                eq[0] = sign
+            else:
+                eq += [sign]
+        else:
+            eq += [sign]
+    else:
+        if len(eq) >= 1:
+            if not eq[-1].isdigit():
                 eq[-1] = sign
             else:
                 eq += [sign]
-    else:
-        if len(eq) > 1 and not eq[-1].replace('.', '', 1).isdigit():
-            eq[-1] = sign
-        else:
-            eq += [sign]
-            if not eq[0].replace('.', '', 1).replace('-', '', 1).isdigit():
-                eq.pop()
     return eq
 
 
