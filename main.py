@@ -47,6 +47,9 @@ def count(eq):
 def add_more(eq, sign):
     """Adds a character to the "equation" list, consisting of two numbers
     and an operation sign between them"""
+    if sign == "C":
+        for _ in range(len(eq)):
+            eq.pop(0)
     if sign == "=":
         if len(eq) == 1:
             pass
