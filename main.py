@@ -47,11 +47,24 @@ def count(eq):
 def add_more(eq, sign):
     """Adds a character to the "equation" list, consisting of two numbers
     and an operation sign between them"""
-    if sign.isdigit():
-        if len(eq) > 1 and eq[-1].replace('.', '', 1).isdigit():
+    if sign == "=":
+        if len(eq) == 1:
+            pass
+        elif len(eq) == 2:
+            eq.pop()
+        elif len(eq) == 3:
+            eq += [sign]
+    elif sign.isdigit():
+        if len(eq) == 1:
+            eq[0] = sign
+        elif len(eq) > 1 and eq[-1].replace('.', '', 1).isdigit():
             eq[-1] += sign
         else:
-            eq += [sign]
+            if len(eq) > 1 and eq[-1] == "=":
+                eq.pop()
+                eq[-1] = sign
+            else:
+                eq += [sign]
     else:
         if len(eq) > 1 and not eq[-1].replace('.', '', 1).isdigit():
             eq[-1] = sign
@@ -70,15 +83,6 @@ def add_x(x):
         add(equation, x)
 
     return f
-
-
-# Special functions
-def c():
-    pass
-
-
-def equal():
-    pass
 
 
 # Output labels
@@ -100,8 +104,8 @@ button_multiply = tk.Button(root, text="*", width=4, font=("Arial", 18), bg="gra
 button_divide = tk.Button(root, text="/", width=4, font=("Arial", 18), bg="gray", command=add_x("/"))
 
 # Special labels
-button_c = tk.Button(root, text="C", width=4, font=("Arial", 18), bg="gray", command=c)
-button_equal = tk.Button(root, text="=", width=4, font=("Arial", 18), bg="gray", command=equal)
+button_c = tk.Button(root, text="C", width=4, font=("Arial", 18), bg="gray", command=add_x("C"))
+button_equal = tk.Button(root, text="=", width=4, font=("Arial", 18), bg="gray", command=add_x("="))
 
 # PLACE Output labels
 process_label.place(x=10, y=10)
