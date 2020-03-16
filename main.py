@@ -52,14 +52,14 @@ def add_more(eq, sign):
             eq.pop(0)
     if sign == "=":
         if len(eq) == 1:
-            pass
+            eq += [sign]
         elif len(eq) == 2:
-            eq.pop()
+            eq[1] = sign
         elif len(eq) == 3:
             eq += [sign]
     elif sign.isdigit():
-        if len(eq) == 1:
-            eq[0] = sign
+        if len(eq) == 1 and eq[0].isdigit():
+            eq[0] += sign
         elif len(eq) > 1 and eq[-1].replace('.', '', 1).isdigit():
             eq[-1] += sign
         else:
