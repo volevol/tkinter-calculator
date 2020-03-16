@@ -29,27 +29,18 @@ def count(eq):
     them and rewrites the list, placing the solution as one of the
     numbers for subsequent operations. The sign of the next operation
     is also saved."""
-    if eq[1] == "+":
-        eq[0] = float(eq[0]) + float(eq[2])
-    elif eq[1] == "-":
-        eq[0] = float(eq[0]) - float(eq[2])
-    elif eq[1] == "*":
-        eq[0] = float(eq[0]) * float(eq[2])
-    elif eq[1] == "/":
-        if eq[2] == "0":
-            print("Error. Division by zero")
+    ops = {"+": operator.add,
+           "-": operator.sub,
+           "*": operator.mul,
+           "/": operator.truediv}
+    if eq[1] == "/" and eq[2] == "0":
+        print("Error. Division by zero")
+        for _ in range(len(eq)):
             eq.pop(0)
-            eq.pop(0)
-            eq.pop(0)
-            eq.pop(0)
-            return eq
-        else:
-            eq[0] = float(eq[0]) / float(eq[2])
     else:
-        print("Unsupported operation")
-    eq.pop(1)
-    eq.pop(1)
-    eq[0] = str(eq[0])
+        eq[0] = str(ops[eq[1]](float(eq[0]), float(eq[2])))
+        for _ in range(len(eq) - 2):
+            eq.pop(1)
     return eq
 
 
@@ -74,6 +65,7 @@ def add_more(eq, sign):
 # Number functions
 def add_x(x):
     """It takes a character from a button and sends it to add()"""
+
     def f():
         add(equation, x)
 
