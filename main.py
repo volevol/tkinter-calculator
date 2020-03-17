@@ -6,7 +6,7 @@ root.title("Calculator")
 root.geometry("390x325")
 
 # Data
-equation = []
+equation = ["0"]
 
 
 # Controller functions
@@ -69,7 +69,6 @@ def add_more(eq, sign):
                         process_insert("", True)
                         if not eq[-1].isdigit() and len(eq[-1]) == 0:
                             eq.pop()
-                            process_insert("", True)
             else:
                 eq.pop()
                 eq[-1] = eq[-1][:-1]
@@ -77,6 +76,22 @@ def add_more(eq, sign):
                     eq[-1] = "0"
                 process_insert("", True)
                 process_insert("", True)
+    elif sign == "±":
+        if len(eq) != 0:
+            if eq[0] != "0":
+                for j in range(-1, -len(eq) - 1, -1):
+                    if eq[j].replace("-", "").replace(".", "").isdigit():
+                        if "." in eq[j]:
+                            eq[j] = str(-float(eq[j]))
+                        else:
+                            eq[j] = str(-int(eq[j]))
+                        answer_insert(eq[j])
+                        break
+                process_insert("clear")
+                text = "".join(eq)
+                if "=" in text:
+                    text = text[:-1]
+                process_insert(text)
     elif sign.isdigit():
         if len(eq) >= 1:
             if eq[-1] == "0":
@@ -88,9 +103,11 @@ def add_more(eq, sign):
                 eq.pop()
                 eq[0] = sign
                 process_insert(sign, True)
-            elif eq[-1].isdigit():
+            elif eq[-1].replace("-", "").isdigit():
                 eq[-1] += sign
                 process_insert(sign)
+                answer_insert(eq[-1])
+                return
             else:
                 if "." in eq[-1]:
                     eq.pop()
@@ -99,9 +116,10 @@ def add_more(eq, sign):
         else:
             eq += [sign]
             process_insert(sign)
+        answer_insert(sign)
     else:
         if len(eq) >= 1:
-            if not eq[-1].isdigit():
+            if not eq[-1].replace("-", "").isdigit():
                 if eq[-1] == "=":
                     process_insert("clear")
                     process_insert(eq[0] + sign)
