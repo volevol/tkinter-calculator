@@ -42,10 +42,12 @@ def count(eq):
         for _ in range(len(eq)):
             eq.pop(0)
         process_insert("")
+        answer_insert("Error. Division by zero")
     else:
         eq[0] = str(ops[eq[1]](float(eq[0]), float(eq[2])))
         for _ in range(len(eq) - 2):
             eq.pop(1)
+        answer_insert(eq)
     return eq
 
 
@@ -55,15 +57,20 @@ def add_more(eq, sign):
         for _ in range(len(eq)):
             eq.pop(0)
         init()
+        answer_insert("0")
     elif sign == "=":
-        if len(eq) != 2:
+        if not eq:
+            answer_insert("0")
+        elif len(eq) != 2:
             eq += [sign]
+            answer_insert("0")
         elif len(eq) == 2:
             if eq[-1] != "=":
                 text = process_label["text"][:-1]
                 process_insert("")
                 process_insert(text)
             eq[1] = sign
+            answer_insert(eq)
     elif sign.isdigit():
         if len(eq) >= 1:
             if eq[-1] == "0":
@@ -119,6 +126,15 @@ def process_insert(sign, pop=False):
         else:
             text = process_label["text"] + sign
         process_label.configure(text=text)
+
+
+def answer_insert(el):
+    if isinstance(el, list):
+        answer_label.configure(text=el[0])
+    elif isinstance(el, str):
+        answer_label.configure(text=el)
+    else:
+        print(el)
 
 
 # Output labels
