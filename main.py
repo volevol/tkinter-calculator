@@ -3,7 +3,7 @@ import operator
 
 root = tk.Tk()
 root.title("Calculator")
-root.geometry("362x325")
+root.geometry("322x325")
 
 # Data
 equation = []
@@ -138,8 +138,8 @@ def answer_insert(el):
 
 
 # Output labels
-process_label = tk.Label(root, anchor=tk.E, text="2+2*2", width=24, font=("Arial", 18), bg="gray", fg="gray20")
-answer_label = tk.Label(root, anchor=tk.E, text="8", width=24, font=("Arial", 18), bg="gray")
+process_label = tk.Label(root, anchor=tk.E, text="2+2*2", width=21, font=("Arial", 18), bg="gray", fg="gray20")
+answer_label = tk.Label(root, anchor=tk.E, text="8", width=21, font=("Arial", 18), bg="gray")
 
 # Number labels
 buttons = []
@@ -164,21 +164,22 @@ answer_label.place(x=10, y=50)
 
 # PLACE Number labels
 for i in range(len(buttons) - 1):
-    buttons[i].place(x=10 + 92 * (i % 3), y=100 + 55 * (i // 3))
-buttons[9].place(x=100, y=265)
+    buttons[i].place(x=10 + 78 * (i % 3), y=100 + 55 * (i // 3))
+buttons[9].place(x=88, y=265)
 
 # PLACE Math labels
-button_add.place(x=286, y=100)
-button_subtract.place(x=286, y=155)
-button_multiply.place(x=286, y=210)
-button_divide.place(x=286, y=265)
+button_add.place(x=244, y=100)
+button_subtract.place(x=244, y=155)
+button_multiply.place(x=244, y=210)
+button_divide.place(x=244, y=265)
 
 # PLACE Special labels
 button_c.place(x=10, y=265)
-button_equal.place(x=194, y=265)
+button_equal.place(x=166, y=265)
 
 init()
 
+root.resizable(False, False)
 root.mainloop()
 
 # выглядит страшно
