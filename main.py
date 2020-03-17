@@ -3,7 +3,7 @@ import operator
 
 root = tk.Tk()
 root.title("Calculator")
-root.geometry("322x325")
+root.geometry("390x325")
 
 # Data
 equation = []
@@ -12,7 +12,7 @@ equation = []
 # Controller functions
 def init():
     """Sets blank lines to labels values"""
-    process_insert("")
+    process_insert("clear")
     answer_insert("")
 
 
@@ -42,6 +42,8 @@ def add_more(eq, sign):
             eq.pop(0)
         init()
         answer_insert("0")
+    elif sign == "CE":
+        answer_insert("0")
     elif sign == "=":
         if not eq:
             answer_insert("0")
@@ -51,25 +53,47 @@ def add_more(eq, sign):
         elif len(eq) == 2:
             if eq[-1] != "=":
                 text = process_label["text"][:-1]
-                process_insert("")
+                process_insert("clear")
                 process_insert(text)
             eq[1] = sign
             answer_insert(eq)
+    elif sign == "⇦":
+        if len(eq) >= 1:
+            if eq[-1].replace(".", "").isdigit():
+                if eq[-1] is not "0":
+                    if len(eq) == 1 and len(eq[-1]) == 1:
+                        eq[-1] = "0"
+                        process_insert("0", True)
+                    else:
+                        eq[-1] = eq[-1][:-1]
+                        process_insert("", True)
+                        if not eq[-1].isdigit() and len(eq[-1]) == 0:
+                            eq.pop()
+                            process_insert("", True)
+            else:
+                eq.pop()
+                eq[-1] = eq[-1][:-1]
+                if len(eq) == 1 and eq[-1] == "":
+                    eq[-1] = "0"
+                process_insert("", True)
+                process_insert("", True)
     elif sign.isdigit():
         if len(eq) >= 1:
             if eq[-1] == "0":
                 if sign != "0":
                     eq[-1] = sign
                     process_insert(sign, True)
-            elif eq[-1].isdigit():
-                eq[-1] += sign
-                process_insert(sign)
             elif eq[-1] == "=":
-                process_insert("")
+                process_insert("clear")
                 eq.pop()
                 eq[0] = sign
                 process_insert(sign, True)
+            elif eq[-1].isdigit():
+                eq[-1] += sign
+                process_insert(sign)
             else:
+                if "." in eq[-1]:
+                    eq.pop()
                 eq += [sign]
                 process_insert(sign)
         else:
@@ -79,7 +103,7 @@ def add_more(eq, sign):
         if len(eq) >= 1:
             if not eq[-1].isdigit():
                 if eq[-1] == "=":
-                    process_insert("")
+                    process_insert("clear")
                     process_insert(eq[0] + sign)
                 else:
                     process_insert(sign, True)
@@ -99,11 +123,11 @@ def count(eq):
            "*": operator.mul,
            "/": operator.truediv}
     if eq[1] == "/" and eq[2] == "0":
-        print("Error. Division by zero")
+        print("Division by zero")
         for _ in range(len(eq)):
             eq.pop(0)
-        process_insert("")
-        answer_insert("Error. Division by zero")
+        process_insert("clear")
+        answer_insert("Division by zero")
     else:
         eq[0] = str(ops[eq[1]](float(eq[0]), float(eq[2])))
         for _ in range(len(eq) - 2):
@@ -114,7 +138,7 @@ def count(eq):
 
 # GUI functions
 def process_insert(sign, pop=False):
-    if sign == "":
+    if sign == "clear":
         process_label.configure(text="")
     else:
         if pop:
@@ -134,18 +158,18 @@ def answer_insert(el):
 
 
 # Output labels
-process_label = tk.Label(root, anchor=tk.E, text="2+2*2", width=21, font=("Arial", 18), bg="gray", fg="gray20")
-answer_label = tk.Label(root, anchor=tk.E, text="8", width=21, font=("Arial", 18), bg="gray")
+process_label = tk.Label(root, anchor=tk.E, text="2+2*2", width=26, font=("Arial", 18), bg="gray", fg="gray20")
+answer_label = tk.Label(root, anchor=tk.E, text="8", width=26, font=("Arial", 18), bg="gray")
 
 # Labels
-content = ["1", "2", "3", "+", "4", "5", "6", "-", "7", "8", "9", "*", "C", "0", "=", "/"]
+content = ["1", "2", "3", "+", "⇦", "4", "5", "6", "-", "C", "7", "8", "9", "*", "CE", "±", "0", ".", "/", "="]
 buttons = []
 for i in content:
     buttons.append(tk.Button(root, text=i, width=4, font=("Arial", 18), bg="gray", command=add_x(i)))
 
 # PLACE Labels
 for i in range(len(buttons)):
-    buttons[i].place(x=10 + 78 * (i % 4), y=100 + 55 * (i // 4))
+    buttons[i].place(x=10 + 76 * (i % 5), y=100 + 55 * (i // 5))
 
 # PLACE Output labels
 process_label.place(x=10, y=10)
