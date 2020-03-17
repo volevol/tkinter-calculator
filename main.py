@@ -69,13 +69,27 @@ def add_more(eq, sign):
                         process_insert("", True)
                         if not eq[-1].isdigit() and len(eq[-1]) == 0:
                             eq.pop()
+            elif eq[-1].replace("-", "").isdigit():
+                if len(eq[-1]) == 2:
+                    eq[-1] = "0"
+                    process_insert("", True)
+                    process_insert("", True)
+                else:
+                    eq[-1] = eq[-1][:-1]
+                    process_insert("", True)
+                    if not eq[-1].isdigit() and len(eq[-1]) == 0:
+                        eq.pop()
             else:
                 eq.pop()
                 eq[-1] = eq[-1][:-1]
-                if len(eq) == 1 and eq[-1] == "":
+                if len(eq) == 1:
+                    if eq[-1] == "":
+                        pass
+                    elif eq[-1] == "-":
+                        process_insert("", True)
                     eq[-1] = "0"
-                process_insert("", True)
-                process_insert("", True)
+                    process_insert("", True)
+                    process_insert("", True)
     elif sign == "±":
         if len(eq) != 0:
             if eq[0] != "0":
